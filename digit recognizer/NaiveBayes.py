@@ -1,30 +1,6 @@
 # coding: utf8
-import csv
+from ReadAndWrite import *
 import numpy as np
-
-
-def load_dataSet(file_path):    # 读取训练数据集
-    label = []    # 训练数据集的标签
-    data = []  # 训练数据集的特征
-    csvfile = file(file_path, 'rb')
-    csvfile.readline()
-    reader = csv.reader(csvfile)
-    for line in reader:
-        label.append(int(line[0]))
-        data.append(map(lambda x: 0 if int(x) == 0 else 1, line[1:]))
-    csvfile.close()
-    return data, label
-
-
-def load_test_data():
-    test_feature = []
-    csvfile = file('test.csv', 'rb')
-    csvfile.readline()
-    reader = csv.reader(csvfile)
-    for line in reader:
-        test_feature.append(map(lambda x: 0 if int(x) == 0 else 1, line))
-    csvfile.close()
-    return test_feature
 
 
 # 统计朴素贝叶斯公式计算所需要的概率值,包括标签的先验概率以及条件概率
@@ -75,17 +51,6 @@ def naive_bayes_test(poss_class, poss_feature):
     return test_label
 
 
-# 将结果打印到csv文件
-def write_result(test_label):
-    result = [['ImageId', 'Label']]
-    for i in range(len(test_label)):
-        result.append([i+1, test_label[i]])
-    csvfile = file('result.csv', 'wb')
-    writer = csv.writer(csvfile)
-    writer.writerows(result)
-    csvfile.close()
-
-
 # 使用支持向量机SVM进行训练和预测
 def svm_predict(train_feature, train_label):
     from sklearn.svm import SVC
@@ -97,10 +62,9 @@ def svm_predict(train_feature, train_label):
 
 
 if __name__ == '__main__':
-    train_feature, train_label = load_dataSet('train.csv')
-    # 朴素贝叶斯方法
-    # poss_class, poss_feature = naive_bayes_calculate(train_feature, train_label)
-    # test_label = naive_bayes_test(poss_class, poss_feature)
+    train_feature, train_label = load_train_data('train.csv')
+    poss_class, poss_feature = naive_bayes_calculate(train_feature, train_label)
+    test_label = naive_bayes_test(poss_class, poss_feature)
 
     # SVM方法
     svm_predict(train_feature, train_label)
