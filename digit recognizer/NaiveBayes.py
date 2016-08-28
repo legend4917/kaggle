@@ -51,21 +51,10 @@ def naive_bayes_test(poss_class, poss_feature):
     return test_label
 
 
-# 使用支持向量机SVM进行训练和预测
-def svm_predict(train_feature, train_label):
-    from sklearn.svm import SVC
-    clf = SVC()
-    clf.fit(train_feature, train_label)
-    test_feature = load_test_data()
-    test_label = clf.predict(test_feature)
-    write_result(test_label)
 
 
 if __name__ == '__main__':
     train_feature, train_label = load_train_data('train.csv')
     poss_class, poss_feature = naive_bayes_calculate(train_feature, train_label)
     test_label = naive_bayes_test(poss_class, poss_feature)
-
-    # SVM方法
-    svm_predict(train_feature, train_label)
-
+    write_result(test_label)
